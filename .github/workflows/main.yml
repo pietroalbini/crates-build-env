@@ -41,6 +41,7 @@ jobs:
     name: Build Windows images
     runs-on: windows-2019
     needs: [lint]
+    if: false
 
     # Use the same job to build all Windows-based images
     strategy:
