@@ -36,3 +36,21 @@ jobs:
 
       - name: Build the Docker image
         run: docker build -t ghcr.io/rust-lang/crates-build-env/${{ matrix.image }} ${{ matrix.image }}/
+
+  build-windows:
+    name: Build Windows images
+    runs-on: windows-2019
+    needs: [lint]
+
+    # Use the same job to build all Windows-based images
+    strategy:
+      matrix:
+        image:
+          - windows
+
+    steps:
+      - name: Checkout the source code
+        uses: actions/checkout@v2
+
+      - name: Build the Docker image
+        run: docker build -t ghcr.io/rust-lang/crates-build-env/${{ matrix.image }} ${{ matrix.image }}/
