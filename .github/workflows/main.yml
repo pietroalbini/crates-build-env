@@ -1,0 +1,38 @@
+---
+
+name: CI
+on:
+  push:
+    branches: [$default-branch]
+  pull_request:
+    branches: [$default-branch]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the source code
+        uses: actions/checkout@v2
+
+      - name: Run the custom linter
+        run: ./lint.sh
+
+  build-linux:
+    name: Build Linux images
+    runs-on: ubuntu-latest
+    needs: [lint]
+
+    # Use the same job to build all Linux-based images
+    strategy:
+      matrix:
+        image:
+          - linux
+          - linux-micro
+
+    steps:
+      - name: Checkout the source code
+        uses: actions/checkout@v2
+
+      - name: Build the Docker image
+        run: docker build -t ghcr.io/rust-lang/crates-build-env/${{ matrix.image }} ${{ matrix.image }}/
